@@ -18,7 +18,9 @@ def Main():
         s , addr = soc.accept()
         print('connect %s:%s ' % (addr))
         # print(s.recv(1024).decode('utf-8'))
-        handleMessage(s,addr)
+        t = threading.Thread(target=handleMessage,args=(s,addr))
+        print('开启了一个新的线程')
+        t.start()
 
 #json解析
 # jsonStr = '{"account":"123213","password":"213"}'
@@ -28,14 +30,15 @@ def Main():
 
 def handleMessage(soc,addr):
     print('start handle message')
-    recStr = soc.recv(1024).decode('utf-8')
-    jsonParser = json.loads(recStr)
-    #用字典模拟的switch
-    result = messageSwitcher[jsonParser['action']](jsonParser['account'],jsonParser['password'])    #模拟switch来处理事务
-    # result = messSwitcher[jsonParser['action']](jsonParser['account'],jsonParser['password'])     #两个方括号get到字典和json字符串的值，最后一个小括号传入参数和运行函数
-    sendStr = '%d'%(result)
-    soc.send(sendStr)
-    print('sql查询结果 %d' % result)
+    while True:
+    	recStr = soc.recv(1024).decode('utf-8')
+    	jsonParser = json.loads(recStr)
+    	#用字典模拟的switch
+    	result = messageSwitcher[jsonParser['action']](jsonParser['account'],jsonParser['password'])    #模拟switch来处理事务
+    	# result = messSwitcher[jsonParser['action']](jsonParser['account'],jsonParser['password'])     #两个方括号get到字典和json字符串的值，最后一个小括号传入参数和运行函数
+    	sendStr = '%d'%(result)
+    	soc.send(sendStr)
+    	print('返回结果 %d' % result)
 
 def loginCheck(account,password):
     sqlConnect = mysql.connector.connect(user='root',password='Yt00206.',database='garage')
