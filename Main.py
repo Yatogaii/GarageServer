@@ -1,6 +1,7 @@
 ﻿# -*- coding:utf-8 -*-
 
 import socket as Socket
+import threading
 import json 
 import mysql.connector
 #用来判断动作的switcher
