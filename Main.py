@@ -5,16 +5,19 @@ import threading
 import json 
 import mysql.connector
 #用来判断动作的switcher
-ACTION_LOGIN = 100
+ACTION_LOGIN = -100
 ACTION_GET_CAR = 100
 ACTION_CAR_SAVE = 123
 #用来检查账号查询结果的switcher
 RESULT_ERROR = 11
 RESULT_REGISTER = 12
 RESULT_SUCCESS = 10
+#Save the mapping between Garage Number and each Gararge's soc
+global garageSoc
 #存放用户的id，在注册用户或者密码正确时赋值
 global ID
 def Main():
+    getGarageSocket()
     soc = Socket.socket(Socket.AF_INET,Socket.SOCK_STREAM)
     soc.bind(('0.0.0.0',8080))
     soc.listen(20)
@@ -80,7 +83,12 @@ def registerNewAccount(sqlConnect,sqlCursor,account,password):
     sqlCursor.execute('INSERT INTO accounts (account,password) values ("%s","%s")' % (account,password) )
     sqlConnect.commit()
 
-
+def getGarageSocket():
+    garageSoc = socket.socket(AF_INET,STREAM_SOCK)
+    
+socMapping = {
+    1 : garageSoc
+}
 messageSwitcher = {
     ACTION_LOGIN : loginCheck,
     ACTION_CAR_SAVE : carSave,
