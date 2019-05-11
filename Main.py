@@ -17,10 +17,10 @@ garageSoc = None
 #存放用户的id，在注册用户或者密码正确时赋值
 global ID
 def Main():
-	#这一行代码是开启车库Socket线程获取的
+    #这一行代码是开启车库Socket线程获取的
     threading.Thread(target=getGarageSocket()).start()
     print('开启了车库Socket接收线程，同时开始监听APP')
-	soc = Socket.socket(Socket.AF_INET,Socket.SOCK_STREAM)
+    soc = Socket.socket(Socket.AF_INET,Socket.SOCK_STREAM)
     soc.bind(('0.0.0.0',8080))
     soc.listen(20)
     while True:
@@ -30,7 +30,7 @@ def Main():
         t = threading.Thread(target=handleMessage,args=(s,addr))
         print('开启了一个新的线程')
         t.start()
-		
+
 #json解析
 # jsonStr = '{"account":"123213","password":"213"}'
 # parJson = json.loads(jsonStr)
@@ -39,7 +39,7 @@ def Main():
 
 def handleMessage(soc,addr):
     while True:
-		print('开始一轮处理信息')
+        print('开始一轮处理信息')
         recStr = soc.recv(1024).decode('utf-8')
         jsonParser = json.loads(recStr)
         #用字典模拟的switch
@@ -54,7 +54,7 @@ def handleMessage(soc,addr):
 
 #一下几个函数是处理对应的Action的
 def loginCheck(account,password):
-	print('进入账户检查函数')
+    print('进入账户检查函数')
     sqlConnect = mysql.connector.connect(user='root',password='Yt00206.',database='garage')
     cursor = sqlConnect.cursor()    #处理sql事务的客户端
     #查询账号
@@ -71,18 +71,18 @@ def loginCheck(account,password):
         return RESULT_REGISTER
     else:               #列表不是空，表示已有该账户
         if password == result[0][2]: #[0]表示唯一的一个数据，[2]表示密码栏目在返回的tuple里面的第三个位置，例如[(1, u'admin', u'123456')]
-			print('密码正确')
+            print('密码正确')
             ID = account
             return RESULT_SUCCESS
         else :
             return RESULT_ERROR
 
 def carGet():
-	print('有用户取车')
+    print('有用户取车')
     return 1
 
 def carSave():
-	print('有用户存车')
+    print('有用户存车')
     return 1
 
 def registerNewAccount(sqlConnect,sqlCursor,account,password):
