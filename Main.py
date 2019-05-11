@@ -18,7 +18,7 @@ garageSoc = None
 global ID
 def Main():
 	#这一行代码是开启车库Socket线程获取的
-    threading.Thread(target=getGarageSocket()).start()
+    #threading.Thread(target=getGarageSocket()).start()
     soc = Socket.socket(Socket.AF_INET,Socket.SOCK_STREAM)
     soc.bind(('0.0.0.0',8080))
     soc.listen(20)
