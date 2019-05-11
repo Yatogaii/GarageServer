@@ -13,11 +13,12 @@ RESULT_ERROR = 11
 RESULT_REGISTER = 12
 RESULT_SUCCESS = 10
 #Save the mapping between Garage Number and each Gararge's soc
-global garageSoc
+garageSoc = None
 #存放用户的id，在注册用户或者密码正确时赋值
 global ID
 def Main():
-    getGarageSocket()
+	#这一行代码是开启车库Socket线程获取的
+    threading.Thread(target=getGarageSocket()).start()
     soc = Socket.socket(Socket.AF_INET,Socket.SOCK_STREAM)
     soc.bind(('0.0.0.0',8080))
     soc.listen(20)
@@ -46,7 +47,7 @@ def handleMessage(soc,addr):
         else:                                           #不需要参数，直接运行函数
             result = messageSwitcher[jsonParser['action']]()
         # result = messSwitcher[jsonParser['action']](jsonParser['account'],jsonParser['password'])     #两个方括号get到字典和json字符串的值，最后一个小括号传入参数和运行函数
-    	sendStr = '%d'%(result)
+        sendStr = '%d'% (result)
         soc.send(sendStr)
         print('返回结果 %d' % result)
 
@@ -84,8 +85,13 @@ def registerNewAccount(sqlConnect,sqlCursor,account,password):
     sqlConnect.commit()
 
 def getGarageSocket():
-    garageSoc = socket.socket(AF_INET,STREAM_SOCK)
-    
+    global garageSoc
+    garageSer = Socket.socket(Socket.AF_INET,Socket.SOCK_STREAM)
+    garageSer.bind(('',8081))
+    garageSer.listen(10)
+    [garageSoc , addr] = garageSer.accept()
+    print('来了一个车库Socket')
+
 socMapping = {
     1 : garageSoc
 }
