@@ -41,7 +41,8 @@ def Main():
 def handleMessage(soc,addr):
     while True:
         print('开始一轮处理信息')
-        recStr = soc.recv(1024).decode('utf-8')
+        buf = soc.recv(1024)
+        recStr = buf.decode('utf-8')
         jsonParser = json.loads(recStr)
         #用字典模拟的switch
         if jsonParser['action'] == ACTION_LOGIN:        #action是login的话需要输入参数，进行特殊处理
