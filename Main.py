@@ -43,6 +43,9 @@ def handleMessage(soc,addr):
         print('开始一轮处理信息')
         buf = soc.recv(1024)
         if len(buf) == 0:
+            if soc.recv(1024)==None：
+                print('soc已经断开')
+                break
             print('接收信息错误')
             continue
         recStr = buf.decode('utf-8')
