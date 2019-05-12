@@ -42,6 +42,9 @@ def handleMessage(soc,addr):
     while True:
         print('开始一轮处理信息')
         buf = soc.recv(1024)
+        if len(buf) == 0:
+            print('接收信息错误')
+            continue
         recStr = buf.decode('utf-8')
         jsonParser = json.loads(recStr)
         #用字典模拟的switch
