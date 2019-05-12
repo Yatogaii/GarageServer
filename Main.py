@@ -28,8 +28,9 @@ def Main():
         print('connect %s:%s ' % (addr))
         # print(s.recv(1024).decode('utf-8'))
         t = threading.Thread(target=handleMessage,args=(s,addr))
-        print('开启了一个新的线程')
+        print('创建了一个新的线程')
         t.start()
+        print('新线程开始')
 
 #json解析
 # jsonStr = '{"account":"123213","password":"213"}'
