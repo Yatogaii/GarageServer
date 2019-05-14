@@ -26,6 +26,7 @@ def Main():
     while True:
         s , addr = soc.accept()
         print('connect %s:%s ' % (addr))
+        s.send('111')
         # print(s.recv(1024).decode('utf-8'))
         t = threading.Thread(target=handleMessage,args=(s,addr))
         print('创建了一个新的线程')
