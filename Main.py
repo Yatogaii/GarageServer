@@ -28,6 +28,9 @@ def Main():
         print('connect %s:%s ' % (addr))
         s.send('111')
         # print(s.recv(1024).decode('utf-8'))
+        s.send('ojbk'.encode())
+        #.settimeout(5) 不能直接设置timeout，因为如果recv5S没有接收到数据的话就会直接关闭，和
+        #  print(s.recv(1024).decode('utf-8'))
         t = threading.Thread(target=handleMessage,args=(s,addr))
         print('创建了一个新的线程')
         t.start()
@@ -43,11 +46,16 @@ def handleMessage(soc,addr):
     while True:
         print('开始一轮处理信息')
         buf = soc.recv(1024)
+        print('收到数据',buf)
         if len(buf) == 0:
             print('链接断开')
             break
         recStr = buf.decode('utf-8')
-        jsonParser = json.loads(recStr)
+        try:
+            jsonParser = json.loads(recStr)
+        except Exception as e:
+            print('error:',e)
+            continue
         #用字典模拟的switch
         if jsonParser['action'] == ACTION_LOGIN:        #action是login的话需要输入参数，进行特殊处理
             result = messageSwitcher[jsonParser['action']](jsonParser['account'],jsonParser['password'])    #模拟switch来处理事务
