@@ -75,11 +75,11 @@ def handleMessage(soc,addr):
         try:
             Log.info('开始一轮处理信息')
             buf = soc.recv(1024)
-            Log.info('收到数据',buf.decode())
             if len(buf) == 0:
                 Log.warning('链接断开')
                 break
             recStr = buf.decode('utf-8')
+            Log.info('收到数据',recStr)
             jsonParser = json.loads(recStr)
         except Exception as e:
             Log.error('error:',e)
