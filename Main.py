@@ -22,9 +22,9 @@ def Main():
     #threading.Thread(target=getGarageSocket()).start()
     #
     #print('开启了车库Socket接收线程，同时开始监听APP')
-    Log.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',level=logging.DEBUG,filemode='a',filename="server.log")
+    Log.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',level=Log.DEBUG,filemode='a',filename="server.log")
     soc = Socket.socket(Socket.AF_INET,Socket.SOCK_STREAM)
-    accThread = threading.Thread(target=thread_acceptSocket,args=soc) 
+    accThread = threading.Thread(target=thread_acceptSocket,args=(soc)) 
     accThread.start()
     print('开始了一个accept线程')
     #以下的被暂时注释掉
