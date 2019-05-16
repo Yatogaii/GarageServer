@@ -80,7 +80,7 @@ def handleMessage(soc,addr):
                 Log.warning('链接断开')
                 break
             recStr = buf.decode('utf-8')
-                jsonParser = json.loads(recStr)
+            jsonParser = json.loads(recStr)
             except Exception as e:
                 Log.error('error:',e)
                 continue
