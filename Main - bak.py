@@ -4,7 +4,6 @@ import socket as Socket
 import threading
 import json 
 import mysql.connector
-import logging as Log
 #用来判断动作的switcher
 ACTION_LOGIN = -100
 ACTION_GET_CAR = 100
@@ -20,38 +19,8 @@ global ID
 def Main():
     #这一行代码是开启车库Socket线程获取的
     #threading.Thread(target=getGarageSocket()).start()
-    #
-    #print('开启了车库Socket接收线程，同时开始监听APP')
-    Log.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',level=logging.DEBUG,filemode='a',filename="server.log")
+    print('开启了车库Socket接收线程，同时开始监听APP')
     soc = Socket.socket(Socket.AF_INET,Socket.SOCK_STREAM)
-    accThread = threading.Thread(target=thread_acceptSocket,args=soc) 
-    accThread.start()
-    print('开始了一个accept线程')
-    #以下的被暂时注释掉
-    #soc.bind(('0.0.0.0',8080))
-    #soc.listen(20)
-    #while True:
-#        s , addr = soc.accept()
- #       print('connect %s:%s ' % (addr))
-  #      #.settimeout(10)    #10秒的timeout，当recv阻塞10秒时就会自动断开链接。安卓端发送心跳包7S一次
-   #     #如果设置timeout的话车库端无法给我发送心跳包
-    #    s.send('111'.encode())
-     #   # print(s.recv(1024).decode('utf-8'))
-      #  s.send('ojbk'.encode())
-       # #.settimeout(5) 不能直接设置timeout，因为如果recv5S没有接收到数据的话就会直接关闭，和嵌入式方面链接会有bug
-        ##  print(s.recv(1024).decode('utf-8'))
-        #t = threading.Thread(target=handleMessage,args=(s,addr))
-        #print('创建了一个新的线程')
-        #t.start()
-        #print('新线程开始')
-
-#json解析
-# jsonStr = '{"account":"123213","password":"213"}'
-# parJson = json.loads(jsonStr)
-# print(parJson['account'])
-# print(parJson)
-
-def thread_acceptSocket(soc):
     soc.bind(('0.0.0.0',8080))
     soc.listen(20)
     while True:
@@ -62,12 +31,18 @@ def thread_acceptSocket(soc):
         s.send('111'.encode())
         # print(s.recv(1024).decode('utf-8'))
         s.send('ojbk'.encode())
-        #.settimeout(5) 不能直接设置timeout，因为如果recv5S没有接收到数据的话就会直接关闭，和嵌入式方面链接会有bug
+        #.settimeout(5) 不能直接设置timeout，因为如果recv5S没有接收到数据的话就会直接关闭，和
         #  print(s.recv(1024).decode('utf-8'))
         t = threading.Thread(target=handleMessage,args=(s,addr))
         print('创建了一个新的线程')
         t.start()
         print('新线程开始')
+
+#json解析
+# jsonStr = '{"account":"123213","password":"213"}'
+# parJson = json.loads(jsonStr)
+# print(parJson['account'])
+# print(parJson)
 
 def handleMessage(soc,addr):
     while True:
