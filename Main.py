@@ -60,7 +60,7 @@ def thread_acceptSocket(soc):
         Log.info('connect %s:%s ' % (addr))
         #.settimeout(10)    #10秒的timeout，当recv阻塞10秒时就会自动断开链接。安卓端发送心跳包7S一次
         #如果设置timeout的话车库端无法给我发送心跳包
-        s.send('111'.encode())
+        #s.send('111'.encode())
         # print(s.recv(1024).decode('utf-8'))
         s.send('ojbk'.encode())
         #.settimeout(5) 不能直接设置timeout，因为如果recv5S没有接收到数据的话就会直接关闭，和嵌入式方面链接会有bug
