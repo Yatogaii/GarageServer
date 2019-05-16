@@ -62,7 +62,6 @@ def thread_acceptSocket(soc):
         #如果设置timeout的话车库端无法给我发送心跳包
         #s.send('111'.encode())
         # print(s.recv(1024).decode('utf-8'))
-        s.send('ojbk'.encode())
         #.settimeout(5) 不能直接设置timeout，因为如果recv5S没有接收到数据的话就会直接关闭，和嵌入式方面链接会有bug
         #  print(s.recv(1024).decode('utf-8'))
         t = threading.Thread(target=handleMessage,args=(s,addr))
@@ -79,10 +78,10 @@ def handleMessage(soc,addr):
                 Log.warning('链接断开')
                 break
             recStr = buf.decode('utf-8')
-            Log.info(('收到数据:' + recStr))
+            Log.info(('收到数据 : %s' % recStr))
             jsonParser = json.loads(recStr)
         except Exception as e:
-            Log.error('error:',e)
+            Log.error('error: %s ' % e)
             continue
         #用字典模拟的switch
         if jsonParser['action'] == ACTION_LOGIN:        #action是login的话需要输入参数，进行特殊处理
