@@ -81,9 +81,9 @@ def handleMessage(soc,addr):
                 break
             recStr = buf.decode('utf-8')
             jsonParser = json.loads(recStr)
-            except Exception as e:
-                Log.error('error:',e)
-                continue
+        except Exception as e:
+            Log.error('error:',e)
+            continue
         #用字典模拟的switch
         if jsonParser['action'] == ACTION_LOGIN:        #action是login的话需要输入参数，进行特殊处理
             result = messageSwitcher[jsonParser['action']](jsonParser['account'],jsonParser['password'])    #模拟switch来处理事务
