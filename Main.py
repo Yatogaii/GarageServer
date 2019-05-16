@@ -75,7 +75,7 @@ def handleMessage(soc,addr):
         try:
             Log.info('开始一轮处理信息')
             buf = soc.recv(1024)
-            Log.info('收到数据',buf)
+            Log.info('收到数据',buf.decode())
             if len(buf) == 0:
                 Log.warning('链接断开')
                 break
