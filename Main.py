@@ -90,7 +90,7 @@ def handleMessage(soc,addr):
             result = messageSwitcher[jsonParser['action']]()
         # result = messSwitcher[jsonParser['action']](jsonParser['account'],jsonParser['password'])     #两个方括号get到字典和json字符串的值，最后一个小括号传入参数和运行函数
         sendStr = '%d' % (result)
-        soc.send(sendStr)
+        soc.send(sendStr.encode())
         Log.info('返回结果 %s' % sendStr)
 
 #一下几个函数是处理对应的Action的
