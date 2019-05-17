@@ -5,6 +5,7 @@ import threading
 import json 
 import mysql.connector
 import logging as Log
+import sys
 #用来判断动作的switcher
 ACTION_LOGIN = -100
 ACTION_GET_CAR = 100
@@ -22,6 +23,8 @@ def Main():
     #threading.Thread(target=getGarageSocket()).start()
     #
     #print('开启了车库Socket接收线程，同时开始监听APP')
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
     Log.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',level=Log.DEBUG,filemode='a',filename="server.log")
     soc = Socket.socket(Socket.AF_INET,Socket.SOCK_STREAM)
     accThread = threading.Thread(target=thread_acceptSocket,args=(soc,)) 
