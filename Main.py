@@ -9,6 +9,7 @@ import logging as Log
 ACTION_LOGIN = -100
 ACTION_GET_CAR = 100
 ACTION_CAR_SAVE = 123
+ACTION_GARAGE = 111
 #用来检查账号查询结果的switcher
 RESULT_ERROR = 11
 RESULT_REGISTER = 12
@@ -23,6 +24,7 @@ def Main():
     #
     #print('开启了车库Socket接收线程，同时开始监听APP')
     Log.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',level=Log.DEBUG,filemode='a',filename="server.log")
+    Log.info('---------------------------------------------------------------')
     soc = Socket.socket(Socket.AF_INET,Socket.SOCK_STREAM)
     accThread = threading.Thread(target=thread_acceptSocket,args=(soc,)) 
     accThread.start()
@@ -86,6 +88,10 @@ def handleMessage(soc,addr):
         #用字典模拟的switch
         if jsonParser['action'] == ACTION_LOGIN:        #action是login的话需要输入参数，进行特殊处理
             result = messageSwitcher[jsonParser['action']](jsonParser['account'],jsonParser['password'])    #模拟switch来处理事务
+        elif jsonParser['action'] == ACTION_GARAGE:
+            global garageSoc
+            Log.info('加入了一个车库Socket')
+            garageSoc = soc;
         else:                                           #不需要参数，直接运行函数
             result = messageSwitcher[jsonParser['action']]()
         # result = messSwitcher[jsonParser['action']](jsonParser['account'],jsonParser['password'])     #两个方括号get到字典和json字符串的值，最后一个小括号传入参数和运行函数
@@ -120,23 +126,27 @@ def loginCheck(account,password):
 
 def carGet():
     Log.info('有用户取车')
+    if garageSoc == None:
+        Log.warning('车库未连接')
+        return 0
+    garageSoc.send('321'.encode())
     return 1
 
 def carSave():
     Log.info('有用户存车')
+    if garageSoc == None:
+        Log.warning('车库未连接')
+        return 0
+    garageSoc.send('123'.encode())
     return 1
 
 def registerNewAccount(sqlConnect,sqlCursor,account,password):
     sqlCursor.execute('INSERT INTO accounts (account,password) values ("%s","%s")' % (account,password) )
     sqlConnect.commit()
 
-def getGarageSocket():
+def getGarageSoc():
     global garageSoc
-    garageSer = Socket.socket(Socket.AF_INET,Socket.SOCK_STREAM)
-    garageSer.bind(('',8081))
-    garageSer.listen(10)
-    [garageSoc , addr] = garageSer.accept()
-    Log.info('来了一个车库Socket')
+    
 
 socMapping = {
     1 : garageSoc
