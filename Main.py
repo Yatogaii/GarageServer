@@ -93,7 +93,7 @@ def handleMessage(soc,addr):
             Log.info('加入了一个车库Socket')
             garageSoc = soc;
         else:                                           #不需要参数，直接运行函数
-            result = messageSwitcher[jsonParser['action']]()
+            result = messageSwitcher[jsonParser['action']](jsonParser['message'])
         # result = messSwitcher[jsonParser['action']](jsonParser['account'],jsonParser['password'])     #两个方括号get到字典和json字符串的值，最后一个小括号传入参数和运行函数
         sendStr = '%d' % (result)
         soc.send(sendStr.encode())
@@ -124,21 +124,15 @@ def loginCheck(account,password):
         else :
             return RESULT_ERROR
 
-def carGet():
+def carAction(msg):
     Log.info('有用户取车')
     if garageSoc == None:
         Log.warning('车库未连接')
         return 0
-    garageSoc.send('321'.encode())
+    garageSoc.send(msg.encode())
+    Log.info('正常流程，向车库发送 %s' % msg)
     return 1
 
-def carSave():
-    Log.info('有用户存车')
-    if garageSoc == None:
-        Log.warning('车库未连接')
-        return 0
-    garageSoc.send('123'.encode())
-    return 1
 
 def registerNewAccount(sqlConnect,sqlCursor,account,password):
     sqlCursor.execute('INSERT INTO accounts (account,password) values ("%s","%s")' % (account,password) )
@@ -153,8 +147,8 @@ socMapping = {
 }
 messageSwitcher = {
     ACTION_LOGIN : loginCheck,
-    ACTION_CAR_SAVE : carSave,
-    ACTION_GET_CAR : carGet
+    ACTION_CAR_SAVE : carAction,
+    ACTION_GET_CAR : carAction
 }
 if __name__ == '__main__':
     Main()
